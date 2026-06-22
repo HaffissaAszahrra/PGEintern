@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    public function login()
+{
+    return view('admin.login');
+}
     // ✅ Single, secure prosesLogin (duplicate removed)
     public function prosesLogin(Request $request)
     {
