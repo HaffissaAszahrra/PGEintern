@@ -33,7 +33,14 @@ class AdminController extends Controller
 
         return redirect('/admin/dashboard');
     }
+public function dashboard()
+{
+    if (!session('admin_login')) {
+        return redirect('/admin/login');
+    }
 
+    return view('admin.dashboard');
+}
     // ✅ Auth guard added
     public function rekapAbsensi()
     {
