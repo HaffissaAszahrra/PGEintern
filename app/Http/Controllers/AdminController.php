@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Intern;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Attendance;
@@ -10,19 +11,23 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function login()
-    {
-        return view('admin.login');
+public function prosesLogin(Request $request)
+{
+    $admin = Admin::where('nip', $request->nip)->first();
+
+    if (!$admin || !Hash::check($request->password, $admin->password)) {
+        return redirect()->back()
+            ->with('error', 'NIP atau Password salah');
     }
 
-    public function dashboard()
-    {
-        if (!session('admin_login')) {
-            return redirect('/admin/login');
-        }
+    session([
+        'admin_login' => true,
+        'admin_id' => $admin->id,
+        'admin_name' => $admin->name
+    ]);
 
-        return view('admin.dashboard');
-    }
+    return redirect('/admin/dashboard');
+}
 
 public function rekapAbsensi()
 {
