@@ -25,16 +25,6 @@ $bulanIndo = [
 
 $tanggalHariIni = $hariIndo[date('l')] . ', ' . date('d') . ' ' . $bulanIndo[(int) date('n')] . ' ' . date('Y');
 
-$jamInt = (int) date('H');
-if ($jamInt < 11) {
-    $sapaan = 'Selamat Pagi';
-} elseif ($jamInt < 15) {
-    $sapaan = 'Selamat Siang';
-} elseif ($jamInt < 18) {
-    $sapaan = 'Selamat Sore';
-} else {
-    $sapaan = 'Selamat Malam';
-}
 ?>
 
 <!DOCTYPE html>
@@ -1236,7 +1226,7 @@ onclick="toggleSidebar()">
 
             <span class="eyebrow"><?= htmlspecialchars($sapaan) ?>, <?= htmlspecialchars($nama) ?> 👋</span>
 
-            <h1>Absensi Mahasiswa</h1>
+            <h1>Absensi Intern</h1>
 
             <p>
                 Lakukan absensi sesuai kondisi kehadiran hari ini
