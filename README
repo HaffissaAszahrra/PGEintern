@@ -1,2 +1,11 @@
-Demo:
-https://pgeintern-production.up.railway.app
+Akses Admin HR
+URL:
+https://pgeintern-production.up.railway.app/admin/login
+NIP:admin001
+Password:admin123
+
+Akses Intern
+URL:
+https://pgeintern-production.up.railway.app/mahasiswa/login
+Email:intern@gmail.com
+Password:intern123
