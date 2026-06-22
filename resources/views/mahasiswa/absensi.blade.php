@@ -6,7 +6,7 @@ $nama = session('intern_name') ?? 'Intern';
 
 $inisial = strtoupper(substr($nama, 0, 1));
 
-/* ===== Info tanggal & sapaan (server-side, ditampilkan modern di topbar) ===== */
+/* ===== Info tanggal (server-side, ditampilkan modern di topbar) ===== */
 $hariIndo = [
     'Sunday'    => 'Minggu',
     'Monday'    => 'Senin',
@@ -24,7 +24,6 @@ $bulanIndo = [
 ];
 
 $tanggalHariIni = $hariIndo[date('l')] . ', ' . date('d') . ' ' . $bulanIndo[(int) date('n')] . ' ' . date('Y');
-
 ?>
 
 <!DOCTYPE html>
@@ -1224,7 +1223,7 @@ onclick="toggleSidebar()">
 
         <div class="title">
 
-            <span class="eyebrow"><?= htmlspecialchars($sapaan) ?>, <?= htmlspecialchars($nama) ?> 👋</span>
+            <span class="eyebrow"><?= htmlspecialchars($nama) ?> 👋</span>
 
             <h1>Absensi Intern</h1>
 
