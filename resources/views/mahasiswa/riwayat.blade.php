@@ -690,7 +690,7 @@ display:block;
 <div class="menu">
 
 <div class="menu-title">
-Menu Mahasiswa
+Menu
 </div>
 
 <a href="/mahasiswa/dashboard">
@@ -729,7 +729,7 @@ Logout
 
         <div class="eyebrow">
             <i class="fa-solid fa-clock-rotate-left"></i>
-            Riwayat Mahasiswa
+            Riwayat Intern
         </div>
 
         <h1>Rekap Absensi</h1>
@@ -755,7 +755,7 @@ Logout
         <div class="info-chip">
             <div class="avatar">{{ strtoupper(substr($nama,0,1)) }}</div>
             <div>
-                <div class="chip-sub">Mahasiswa Magang</div>
+                <div class="chip-sub">Intern</div>
                 <div class="chip-main">{{ $nama }}</div>
             </div>
         </div>

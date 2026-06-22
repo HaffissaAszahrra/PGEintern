@@ -43,7 +43,7 @@ if ($jamInt < 11) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>Absensi Mahasiswa</title>
+<title>Absensi Intern</title>
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -1186,7 +1186,7 @@ onclick="toggleSidebar()">
     <div class="menu">
 
         <div class="menu-title">
-            Menu Mahasiswa
+            Menu
         </div>
 
         <a href="/mahasiswa/dashboard">
@@ -1257,7 +1257,7 @@ onclick="toggleSidebar()">
             <div class="profile">
                 <div class="avatar"><?= htmlspecialchars($inisial) ?></div>
                 <div class="profile-text">
-                    <div class="profile-greet">Mahasiswa Magang</div>
+                    <div class="profile-greet">Intern</div>
                     <div class="profile-name"><?= htmlspecialchars($nama) ?></div>
                 </div>
             </div>
