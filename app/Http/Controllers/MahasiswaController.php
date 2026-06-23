@@ -25,7 +25,7 @@ class MahasiswaController extends Controller
 
 public function prosesLogin(Request $request)
 {
-    dd($request->all());
+
     $intern = Intern::where('email', $request->email)->first();
 
     if (!$intern || !Hash::check($request->password, $intern->password)) {
