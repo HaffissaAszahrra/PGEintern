@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Intern;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
+
 class MahasiswaController extends Controller
 {
     public function dashboard()
@@ -23,11 +25,9 @@ class MahasiswaController extends Controller
 
 public function prosesLogin(Request $request)
 {
-    $intern = Intern::where('email', $request->email)
-                    ->where('password', $request->password)
-                    ->first();
+    $intern = Intern::where('email', $request->email)->first();
 
-    if(!$intern){
+    if (!$intern || !Hash::check($request->password, $intern->password)) {
         return back()->with('error', 'Email atau Password salah');
     }
 
