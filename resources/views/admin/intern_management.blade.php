@@ -682,6 +682,27 @@ tbody tr:hover td{
     background:#fff;
 }
 
+.date-field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.date-label{
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--green-700);
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.date-field input{
+    width:100%;
+}
+
 .modal-actions{
     margin-top:22px;
     display:flex;
@@ -1082,13 +1103,19 @@ onclick="toggleSidebar()">
       placeholder="Password"
       required>
 
-    <input
-      type="date"
-      name="start_date">
+    <div class="date-field">
+      <label class="date-label"><i class="fas fa-play-circle"></i> Awal Magang</label>
+      <input
+        type="date"
+        name="start_date">
+    </div>
 
-    <input
-      type="date"
-      name="end_date">
+    <div class="date-field">
+      <label class="date-label"><i class="fas fa-stop-circle"></i> Akhir Magang</label>
+      <input
+        type="date"
+        name="end_date">
+    </div>
 
   </div>
 
