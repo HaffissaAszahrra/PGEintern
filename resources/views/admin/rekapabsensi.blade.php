@@ -1035,7 +1035,7 @@ onclick="toggleSidebar()">
 
           <td class="col-selfie" style="text-align:center;">
             @if($attendance->selfie_photo)
-              <button onclick="openSelfieModal('{{ asset('storage/'.$attendance->selfie_photo) }}','{{ $attendance->intern->name ?? '' }}')" class="link-photo" style="border:none;cursor:pointer;">
+              <button onclick="openSelfieModal('{{ asset('storage/'.$attendance->selfie_photo) }}','{{ $attendance->intern->name ?? '' }}','{{ $attendance->check_in ?? '' }}')" class="link-photo" style="border:none;cursor:pointer;">
                 <i class="fas fa-camera"></i> Lihat
               </button>
             @else
@@ -1045,9 +1045,9 @@ onclick="toggleSidebar()">
 
           <td class="col-surat" style="text-align:center;">
             @if($attendance->supporting_document)
-              <a href="{{ asset('storage/'.$attendance->supporting_document) }}" target="_blank" class="link-doc">
+              <button onclick="openDocModal('{{ asset('storage/'.$attendance->supporting_document) }}','{{ $attendance->intern->name ?? '' }}')" class="link-doc" style="border:none;cursor:pointer;">
                 <i class="fas fa-file-alt"></i> Buka
-              </a>
+              </button>
             @else
               <span class="text-muted">—</span>
             @endif
@@ -1082,16 +1082,50 @@ onclick="toggleSidebar()">
   <div class="selfie-content">
     <div class="selfie-header">
       <div>
-        <span style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:1px;">Foto Selfie</span>
+        <span style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:1px;">Bukti Dokumentasi Kehadiran</span>
         <h2 id="selfieModalName" style="font-size:17px;margin-top:2px;"></h2>
       </div>
       <button class="close-modal" onclick="closeSelfieModal()">×</button>
     </div>
     <div class="selfie-body">
+      <!-- Info jam masuk & status telat -->
+      <div id="selfieAttendanceInfo" style="display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
+        <div style="flex:1;">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Jam Masuk</div>
+          <div id="selfieCheckIn" style="font-size:22px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px;">—</div>
+        </div>
+        <div id="selfieBadgeTelat" style="padding:8px 16px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.3px;"></div>
+      </div>
       <img id="selfieModalImg" src="" alt="Foto Selfie" style="width:100%;border-radius:14px;display:block;">
     </div>
     <div style="padding:16px 24px 22px;">
       <button onclick="closeSelfieModal()" style="width:100%;padding:13px;background:var(--green-700);color:white;border:none;border-radius:14px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s ease;">
+        <i class="fas fa-arrow-left"></i> Kembali ke Rekap Absensi
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DOCUMENT MODAL (Surat Dokter) -->
+<div class="selfie-modal" id="docModal">
+  <div class="selfie-content" style="max-width:520px;">
+    <div class="selfie-header">
+      <div>
+        <span style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:1px;">Surat Dokter</span>
+        <h2 id="docModalName" style="font-size:17px;margin-top:2px;"></h2>
+      </div>
+      <button class="close-modal" onclick="closeDocModal()">×</button>
+    </div>
+    <div class="selfie-body" style="padding:22px 24px 12px;">
+      <div id="docPreviewWrap" style="width:100%;min-height:340px;border-radius:14px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
+        <!-- iframe for PDF, img for image -->
+      </div>
+    </div>
+    <div style="padding:16px 24px 22px;display:flex;gap:10px;">
+      <a id="docDownloadLink" href="#" target="_blank" style="flex:1;padding:13px;background:var(--blue);color:white;border:none;border-radius:14px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:background .2s ease;">
+        <i class="fas fa-external-link-alt"></i> Buka di Tab Baru
+      </a>
+      <button onclick="closeDocModal()" style="flex:1;padding:13px;background:var(--green-700);color:white;border:none;border-radius:14px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s ease;">
         <i class="fas fa-arrow-left"></i> Kembali ke Rekap Absensi
       </button>
     </div>
@@ -1107,70 +1141,114 @@ document.getElementById('searchInput').addEventListener('keyup',function(){
   });
 });
 
-// ----- MODAL -----
-const attendanceDetail = {
-  hadir:`<div class="detail-card"><h3 style="color:#22c55e;">Hadir</h3><p>Check In : 07:15 WIB</p><p>Check Out : 16:30 WIB</p><p>Status : Tidak Telat</p><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500" class="documentation"></div>`,
-  izin:`<div class="detail-card"><h3 style="color:#eab308;">Izin</h3><p>Alasan : Acara keluarga.</p></div>`,
-  sakit:`<div class="detail-card"><h3 style="color:#3b82f6;">Sakit</h3><p>Diagnosa : Demam dan flu.</p><img src="https://images.unsplash.com/photo-1583912267550-d8c8f5f4d6f0?w=500" class="documentation"></div>`,
-  alpha:`<div class="detail-card"><h3 style="color:#f43f5e;">Alpha</h3><p>Tidak ada keterangan.</p></div>`
-};
-
+// ----- MODAL (attendance detail - legacy) -----
 function openModal(status){
   document.getElementById('attendanceModal').classList.add('active');
-  document.getElementById('attendanceBody').innerHTML=attendanceDetail[status]||'';
 }
 function closeModal(){
   document.getElementById('attendanceModal').classList.remove('active');
 }
 
 // ----- SELFIE MODAL -----
-function openSelfieModal(url, name){
-
-  alert(url);
-
+function openSelfieModal(url, name, checkIn){
   document.getElementById('selfieModal').classList.add('active');
   document.getElementById('selfieModalImg').src = url;
   document.getElementById('selfieModalName').textContent = name;
+
+  // Jam masuk & status telat
+  const checkInEl = document.getElementById('selfieCheckIn');
+  const badgeEl   = document.getElementById('selfieBadgeTelat');
+
+  if(checkIn && checkIn !== ''){
+    checkInEl.textContent = checkIn + ' WIB';
+
+    // Parse jam & menit dari format HH:MM atau HH:MM:SS
+    const parts = checkIn.split(':');
+    const jam   = parseInt(parts[0], 10);
+    const menit = parseInt(parts[1], 10);
+    const totalMenit = jam * 60 + menit;
+
+    // Tidak telat: 07:15 s/d 07:59 (07:60 tidak valid, jadi 07:59)
+    // Telat: >= 08:00
+    const batasTelat = 8 * 60; // 08:00
+
+    if(totalMenit < batasTelat){
+      badgeEl.textContent = '✓ Tidak Telat';
+      badgeEl.style.background = 'var(--green-pale)';
+      badgeEl.style.color = 'var(--green-ink)';
+    } else {
+      badgeEl.textContent = '⚠ Telat';
+      badgeEl.style.background = 'var(--red-pale)';
+      badgeEl.style.color = 'var(--red-ink)';
+    }
+  } else {
+    checkInEl.textContent = '—';
+    badgeEl.textContent = '';
+    badgeEl.style.background = 'transparent';
+  }
 }
+
 function closeSelfieModal(){
   document.getElementById('selfieModal').classList.remove('active');
   document.getElementById('selfieModalImg').src = '';
 }
 
+// ----- DOCUMENT MODAL (Surat Dokter) -----
+function openDocModal(url, name){
+  document.getElementById('docModal').classList.add('active');
+  document.getElementById('docModalName').textContent = name;
+  document.getElementById('docDownloadLink').href = url;
+
+  const wrap = document.getElementById('docPreviewWrap');
+  wrap.innerHTML = '';
+
+  const ext = url.split('?')[0].split('.').pop().toLowerCase();
+
+  if(ext === 'pdf'){
+    // Tampilkan PDF dalam iframe
+    const iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.style.cssText = 'width:100%;height:420px;border:none;border-radius:14px;';
+    wrap.appendChild(iframe);
+  } else if(['jpg','jpeg','png','gif','webp'].includes(ext)){
+    // Tampilkan gambar
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = 'Surat Dokter';
+    img.style.cssText = 'width:100%;border-radius:14px;display:block;';
+    wrap.appendChild(img);
+  } else {
+    // Fallback: tampilkan link
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-file-alt" style="font-size:48px;color:var(--muted);margin-bottom:16px;display:block;"></i><p style="color:var(--muted);font-size:14px;">Format file tidak dapat dipreview.<br>Gunakan tombol "Buka di Tab Baru".</p></div>';
+  }
+}
+
+function closeDocModal(){
+  document.getElementById('docModal').classList.remove('active');
+  document.getElementById('docPreviewWrap').innerHTML = '';
+}
+
 /* SIDEBAR */
-
 function toggleSidebar(){
-
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
-
     sidebar.classList.toggle("active");
     overlay.classList.toggle("show");
-
 }
 
 /* SMOOTH PAGE TRANSITION ON NAVIGATION */
-
 document.querySelectorAll('a[href^="/"]').forEach(link => {
-
     link.addEventListener('click', function(e){
-
         const href = this.getAttribute('href');
-
         if(!href || href.startsWith('#')) return;
-
         e.preventDefault();
-
         document.body.style.transition = 'opacity .25s ease, transform .25s ease';
         document.body.style.opacity = '0';
         document.body.style.transform = 'translateY(8px)';
-
         setTimeout(() => {
             window.location.href = href;
         }, 220);
-
     });
-
 });
 </script>
 </body>
