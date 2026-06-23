@@ -158,6 +158,7 @@ a{
     flex-direction:column;
     gap:4px;
     flex:1;
+    min-height:0;
     overflow-y:auto;
 }
 
@@ -219,8 +220,9 @@ a{
 /* LOGOUT */
 
 .logout-sidebar{
-    margin-top:auto;
+    flex-shrink:0;
     padding:20px;
+    border-top:1px solid rgba(255,255,255,0.1);
 }
 
 .logout-sidebar a{
