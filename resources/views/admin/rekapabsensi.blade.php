@@ -1125,6 +1125,9 @@ function closeModal(){
 
 // ----- SELFIE MODAL -----
 function openSelfieModal(url, name){
+
+  alert(url);
+
   document.getElementById('selfieModal').classList.add('active');
   document.getElementById('selfieModalImg').src = url;
   document.getElementById('selfieModalName').textContent = name;
