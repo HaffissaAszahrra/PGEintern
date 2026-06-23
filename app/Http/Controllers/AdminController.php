@@ -80,7 +80,7 @@ public function dashboard()
             'intern_code' => 'INT' . rand(1000, 9999),
             'name'        => $request->name,
             'email'       => $request->email,
-            'password'    => $request->password,
+'password' => Hash::make($request->password),
             'phone'       => $request->phone,
             'institution' => $request->institution,
             'major'       => $request->major,
