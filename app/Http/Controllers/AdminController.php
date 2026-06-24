@@ -39,7 +39,15 @@ public function dashboard()
         return redirect('/admin/login');
     }
 
-    return view('admin.dashboard');
+    $recentAttendances = Attendance::with('intern')
+        ->latest()
+        ->take(10)
+        ->get();
+
+    return view(
+        'admin.dashboard',
+        compact('recentAttendances')
+    );
 }
     // ✅ Auth guard added
     public function rekapAbsensi()
